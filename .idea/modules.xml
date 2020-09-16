@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ai_notification_enable.iml" filepath="$PROJECT_DIR$/ai_notification_enable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/ai_notification_enable_android.iml" filepath="$PROJECT_DIR$/android/ai_notification_enable_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/example/android/ai_notification_enable_example_android.iml" filepath="$PROJECT_DIR$/example/android/ai_notification_enable_example_android.iml" />
+    </modules>
+  </component>
+</project>
