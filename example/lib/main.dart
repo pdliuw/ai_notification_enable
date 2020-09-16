@@ -1,11 +1,17 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:ai_notification_enable/ai_notification_enable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MaterialApp(
+    theme: ThemeData().copyWith(
+      primaryIconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+    ),
+    home: MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -13,46 +19,93 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  bool _notificationEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkNotificationStatus();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await AiNotificationEnable.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  ///
+  /// Check notification status
+  _checkNotificationStatus() async {
+    if (await AiNotificationEnable.notificationEnabled()) {
+      setState(() {
+        _notificationEnabled = true;
+      });
+    } else {
+      setState(() {
+        _notificationEnabled = false;
+      });
     }
+  }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  ///
+  /// OpenNotification
+  _openNotification() {
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text("开启通知服务"),
+          content: Text("打开通知服务，及时接收App消息?"),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("取消"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text("去打开"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                AiNotificationEnable.openNotificationSettings();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Plugin example app'),
       ),
+      body: Center(
+          child: _notificationEnabled
+              ? Text('通知服务: 已开启')
+              : MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  textColor: Theme.of(context).primaryIconTheme.color,
+                  onPressed: () {
+                    _openNotification();
+                  },
+                  child: Text("去开启通知服务"),
+                )),
     );
+  }
+
+  ///
+  /// Lifecycle
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _checkNotificationStatus();
+    }
   }
 }

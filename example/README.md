@@ -1,16 +1,143 @@
 # ai_notification_enable_example
 
-Demonstrates how to use the ai_notification_enable plugin.
 
-## Getting Started
+![totem](https://raw.githubusercontent.com/pdliuw/pdliuw.github.io/master/images/totem_four_logo.jpg)
 
-This project is a starting point for a Flutter application.
+-----
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+[![pub package](https://img.shields.io/pub/v/ai_notification_enable.svg)](https://pub.dev/packages/ai_notification_enable)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+<details>
+<summary>full example</summary>
+
+```
+        
+        import 'package:ai_notification_enable/ai_notification_enable.dart';
+        import 'package:flutter/cupertino.dart';
+        import 'package:flutter/material.dart';
+        
+        void main() {
+          WidgetsFlutterBinding.ensureInitialized();
+          runApp(MaterialApp(
+            theme: ThemeData().copyWith(
+              primaryIconTheme: IconThemeData(
+                color: Colors.white,
+              ),
+            ),
+            home: MyApp(),
+          ));
+        }
+        
+        class MyApp extends StatefulWidget {
+          @override
+          _MyAppState createState() => _MyAppState();
+        }
+        
+        class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+          bool _notificationEnabled = false;
+        
+          @override
+          void initState() {
+            super.initState();
+            WidgetsBinding.instance.addObserver(this);
+            _checkNotificationStatus();
+          }
+        
+          @override
+          void dispose() {
+            super.dispose();
+            WidgetsBinding.instance.removeObserver(this);
+          }
+        
+          ///
+          /// Check notification status
+          _checkNotificationStatus() async {
+            if (await AiNotificationEnable.notificationEnabled()) {
+              setState(() {
+                _notificationEnabled = true;
+              });
+            } else {
+              setState(() {
+                _notificationEnabled = false;
+              });
+            }
+          }
+        
+          ///
+          /// OpenNotification
+          _openNotification() {
+            showCupertinoDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                  title: Text("开启通知服务"),
+                  content: Text("打开通知服务，及时接收App消息?"),
+                  actions: [
+                    CupertinoDialogAction(
+                      child: Text("取消"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    CupertinoDialogAction(
+                      child: Text("去打开"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        AiNotificationEnable.openNotificationSettings();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        
+          @override
+          Widget build(BuildContext context) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Plugin example app'),
+              ),
+              body: Center(
+                  child: _notificationEnabled
+                      ? Text('通知服务: 已开启')
+                      : MaterialButton(
+                          color: Theme.of(context).primaryColor,
+                          textColor: Theme.of(context).primaryIconTheme.color,
+                          onPressed: () {
+                            _openNotification();
+                          },
+                          child: Text("去开启通知服务"),
+                        )),
+            );
+          }
+        
+          ///
+          /// Lifecycle
+          @override
+          void didChangeAppLifecycleState(AppLifecycleState state) {
+            super.didChangeAppLifecycleState(state);
+            if (state == AppLifecycleState.resumed) {
+              _checkNotificationStatus();
+            }
+          }
+        }
+        
+
+
+
+```
+
+</details>
+
+
+
+## LICENSE
+
+    BSD 3-Clause License
+    
+    Copyright (c) 2020, pdliuw
+    All rights reserved.
