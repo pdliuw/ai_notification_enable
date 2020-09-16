@@ -10,7 +10,7 @@
 
 ## Effect
 
-|iOS-map|Android-map|
+|iOS-notification|Android-notification|
 |:-|:-|
 |![ios](https://github.com/pdliuw/ai_notification_enable/blob/master/example/gif/ai_notification_enable_ios.gif)|![android](https://github.com/pdliuw/ai_notification_enable/blob/master/example/gif/ai_notification_enable_android.gif)|
 |:-|:-|
