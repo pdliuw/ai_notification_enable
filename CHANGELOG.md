@@ -1,3 +1,3 @@
-## 0.0.1
+## [1.0.1]
 
-* TODO: Describe initial release.
+* support: android + ios, check notification status,and open settings
