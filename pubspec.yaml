@@ -1,8 +1,8 @@
 name: ai_notification_enable
 description: A new flutter plugin project.
 version: 0.0.1
-author:
-homepage:
+homepage: https://pdliuw.github.io/
+repository: https://github.com/pdliuw/ai_notification_enable
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
