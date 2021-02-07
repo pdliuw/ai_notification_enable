@@ -1,3 +1,7 @@
+## [1.6.1]
+
+* upgrade: iOS deployment target 8.0 to 9.0
+
 ## [1.6.0]
 
 * fix something
