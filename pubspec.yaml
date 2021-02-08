@@ -6,7 +6,7 @@ repository: https://github.com/pdliuw/ai_notification_enable
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  flutter: ">=1.20.0 <2.0.0"
 
 dependencies:
   flutter:
